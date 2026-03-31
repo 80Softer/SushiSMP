@@ -13,17 +13,11 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.MY_TOKEN }}
         run: |
-          # 1. あなたの Codespace の名前を取得
           CS_NAME=$(gh codespace list --repo 80Softer/SushiSMP --json name -q '.[0].name')
-          
           if [ -z "$CS_NAME" ]; then
             echo "❌ Codespaceが見つかりませんでした。"
             exit 1
           fi
-          
           echo "🚀 Codespace '$CS_NAME' を起動します..."
-          
-          # 2. 直接「起動」命令を送る（これが最強の方法です）
           gh api -X POST /user/codespaces/$CS_NAME/start
-          
           echo "✅ サーバーの起動命令を送信しました！"
