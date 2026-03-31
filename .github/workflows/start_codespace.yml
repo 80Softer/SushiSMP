@@ -1,0 +1,23 @@
+name: Start Codespace from GAS
+on:
+  repository_dispatch:
+    types: [start-server]
+
+jobs:
+  start-codespace:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Start Codespace
+        run: |
+          # 自分のCodespaceの名前を取得して起動する
+          CODESPACE_NAME=$(curl -s -X GET \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/user/codespaces \
+            | jq -r '.codespaces[0].name')
+          
+          curl -L \
+            -X POST \
+            -H "Accept: application/vnd.github.v3+json" \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            https://api.github.com/user/codespaces/$CODESPACE_NAME/start
