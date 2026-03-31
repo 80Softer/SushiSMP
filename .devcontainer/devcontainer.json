@@ -1,5 +1,11 @@
 {
-    "name": "Minecraft Server",
-    "image": "mcr.microsoft.com/devcontainers/universal:latest",
-    "postStartCommand": "bash .devcontainer/start.sh"
+  "name": "SushiSMP Server",
+  "image": "mcr.microsoft.com/devcontainers/java:17", 
+  "customizations": {
+    "codespaces": {
+      "openFiles": []
+    }
+  },
+  // 🚀 ここがポイント！起動直後に「start.sh」を実行させる
+  "postStartCommand": "bash start.sh"
 }
