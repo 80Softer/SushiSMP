@@ -16,12 +16,10 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           CS_NAME=$(gh codespace list --repo 80softer/SushiSMP --json name -q '.[0].name')
-          
           if [ -z "$CS_NAME" ]; then
             echo "❌ Codespaceが見つかりませんでした。"
             exit 1
           fi
-          
           echo "🚀 Codespace '$CS_NAME' を起動します..."
           gh codespace code -c "$CS_NAME"
           echo "✅ 起動命令を送信しました！"
