@@ -1,0 +1,34 @@
+<div id="server-panel" style="background: #f0f0f0; border: 1px solid #ccc; padding: 15px; border-radius: 5px; width: 250px; text-align: center;">
+    <h3 style="margin-top: 0;">SushiSMP Control</h3>
+    <button id="start-btn" onclick="runBootProcess()" style="background-color: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">
+        🚀 サーバー起動
+    </button>
+    <p id="status-text" style="font-size: 12px; margin-top: 10px; color: #666;">ボタンを押して起動リクエストを送信</p>
+</div>
+
+<script>
+async function runBootProcess() {
+    // あなたが発行したGASのURL
+    const gasUrl = "https://script.google.com/macros/s/AKfycbxyBl0gbiLRaWTXe0xZe85PxPcrO_bKlJgXX5l162frARXOlBhWf6dBOpzE_Qxix8DcKw/exec";
+    
+    const btn = document.getElementById('start-btn');
+    const txt = document.getElementById('status-text');
+
+    // ボタンを無効化して連打を防ぐ
+    btn.disabled = true;
+    btn.style.backgroundColor = "#ccc";
+    txt.innerText = "通信中...";
+
+    try {
+        // GASへ信号を送る
+        const response = await fetch(gasUrl, { method: "POST" });
+        const result = await response.text();
+        
+        txt.innerText = "完了: " + result;
+    } catch (e) {
+        txt.innerText = "エラー: 接続できませんでした";
+        btn.disabled = false;
+        btn.style.backgroundColor = "#28a745";
+    }
+}
+</script>
