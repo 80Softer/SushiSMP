@@ -1,53 +1,39 @@
-{
-  "name": "SushiSMP Server",
-  "image": "mcr.microsoft.com/devcontainers/java:17",
+#!/bin/bash
+# --- 1. Waterfall の起動 ---
+echo "🌊 Starting Waterfall..."
+cd /workspaces/SushiSMP/waterfall || exit
+# proxyという名前のscreenで裏起動
+screen -d -m -S proxy java -Xms512M -Xmx512M -jar waterfall.jar
+# --- 2. 少し待機 ---
+sleep 5
 
-  // 📦 必要な道具（screenなど）を自動で入れる設定
-  "features": {
-    "ghcr.io/devcontainers/features/common-utils:1": {
-      "installZsh": true,
-      "configureZshAsDefaultShell": false
-    }
-  },
+# --- 3. マイクラ本体の起動 ---
+echo "🌍 Starting Minecraft Server..."
+cd /workspaces/SushiSMP/server || exit
+# minecraftという名前のscreenで裏起動
+screen -d -m -S minecraft java -Xms1G -Xmx1G -jar server.jar
 
-  // 🚀 Codespaceが起動した瞬間に実行される命令
-  // 1. 念のため最新の状態にする
-  // 2. screenをインストール
-  // 3. start.shを動かしてWaterfallとServerを裏で起動
-  "postStartCommand": "sudo apt-get update && sudo apt-get install -y screen && bash /workspaces/SushiSMP/.devcontainer/start.sh",
+echo "✅ Servers started in separate screens!"
+=======
+# --- Waterfall の起動 ---
+=======
+# 1. 実行権限を自分自身に与える
+chmod +x "$0"
 
-  "customizations": {
-    "vscode": {
-      // 便利な拡張機能を入れておくと管理が楽になります
-      "extensions": [
-        "vscjava.vscode-java-pack",
-        "mrmlnc.vscode-apache-conf"
-      ]
-    },
-    "codespaces": {
-      "openFiles": [
-        ".devcontainer/start.sh",
-        "waterfall/waterfall.log",
-        "server/server.log"
-      ]
-    }
-  },
+# 2. Waterfall の起動
+>>>>>>> 6ea1a8b (fix: updated start.sh with better logging and paths)
+echo "🌊 Starting Waterfall..."
+cd /workspaces/SushiSMP/waterfall || exit
+# ログを出力するようにして screen 起動
+screen -dmS proxy bash -c "java -Xms512M -Xmx512M -jar waterfall.jar > startup.log 2>&1"
 
-  // 🌐 マイクラとProxyのポートを自動開放
-  // 25565: Minecraft本体 / 25577: Waterfall
-  "forwardPorts": [
-    25565,
-    25577
-  ],
+sleep 3
 
-  "portsAttributes": {
-    "25565": {
-      "label": "Minecraft Server",
-      "onAutoForward": "notify"
-    },
-    "25577": {
-      "label": "Waterfall Proxy",
-      "onAutoForward": "notify"
-    }
-  }
-}
+# 3. Server の起動
+echo "🌍 Starting Minecraft Server..."
+cd /workspaces/SushiSMP/server || exit
+# ログを出力するようにして screen 起動
+screen -dmS minecraft bash -c "java -Xms1G -Xmx1G -jar server.jar > startup.log 2>&1"
+echo "✅ Check results with 'screen -ls'"
+=======
+echo "✅ Check 'screen -ls' in 5 seconds."
