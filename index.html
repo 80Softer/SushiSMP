@@ -5,65 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SushiSMP - Server Control</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .card { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; width: 320px; }
-        h1 { color: #333; margin-bottom: 1.5rem; font-size: 1.5rem; }
-        #start-btn { background-color: #28a745; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: bold; transition: background 0.3s; width: 100%; }
-        #start-btn:hover { background-color: #218838; }
-        #start-btn:disabled { background-color: #ccc; cursor: not-allowed; }
-        #status-text { margin-top: 1rem; font-size: 0.9rem; color: #666; min-height: 1.2em; }
-        .loader { border: 3px solid #f3f3f3; border-top: 3px solid #3498db; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; margin-right: 8px; display: none; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        body { font-family: sans-serif; background-color: #f4f7f6; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: white; padding: 2.5rem; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; width: 340px; }
+        h1 { color: #333; margin-bottom: 1.5rem; font-size: 1.6rem; }
+        #start-btn { background-color: #28a745; color: white; border: none; padding: 16px 28px; border-radius: 10px; cursor: pointer; font-size: 1.1rem; font-weight: bold; width: 100%; transition: 0.2s; }
+        #start-btn:active { transform: scale(0.98); }
+        #start-btn:disabled { background-color: #bbb; cursor: not-allowed; }
+        #msg { margin-top: 1.2rem; font-size: 0.95rem; color: #555; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="card">
     <h1>🍣 SushiSMP Portal</h1>
-    
-    <button id="start-btn" onclick="runBootProcess()">
-        🚀 サーバーを起動する
-    </button>
-    
-    <div id="status-text">
-        <span id="loader" class="loader"></span>
-        <span id="msg">ボタンを押すとCodespaceが起きます</span>
-    </div>
+    <button id="start-btn" onclick="runBootProcess()">🚀 サーバーを起動する</button>
+    <div id="msg">ボタンを押してサーバーをオン！</div>
 </div>
 
 <script>
 async function runBootProcess() {
-    // あなたのGASウェブアプリURL
-    const gasUrl = "https://script.google.com/macros/s/AKfycby1G3eFDRUxS_Q327CWnbDpI3sTWbH7u_3z_c5E08WT20c2nQY2IhSreSc1Z7nN4w-F/exec";
+    // あなたの最新URLです
+    const gasUrl = "https://script.google.com/macros/s/AKfycbxrMDadZoA-MLZMi3YjVzTQU_OZvcuPHydTwF5AVPIVAXNQi8lyLL3QJIeuEy_ej9k1bg/exec";
     
     const btn = document.getElementById('start-btn');
     const msg = document.getElementById('msg');
-    const loader = document.getElementById('loader');
 
-    // 状態の更新
     btn.disabled = true;
-    loader.style.display = "inline-block";
     msg.innerText = "信号を送信中...";
 
     try {
-        // GASへPOSTリクエストを送信
-        const response = await fetch(gasUrl, { method: "POST" });
-        const result = await response.text();
+        // mode: 'no-cors' でブラウザのブロックを回避
+        await fetch(gasUrl, { method: "POST", mode: "no-cors" });
         
-        // 成功時の表示
-        loader.style.display = "none";
         msg.style.color = "#28a745";
-        msg.innerText = "✅ 送信完了！1~2分でサーバーが立ち上がります。";
+        msg.innerText = "✅ 送信完了！Actionsを見てね！";
         
     } catch (e) {
-        // エラー時の表示
-        loader.style.display = "none";
         msg.style.color = "#dc3545";
-        msg.innerText = "❌ エラー: 接続できませんでした";
+        msg.innerText = "❌ 送信に失敗しました";
         btn.disabled = false;
     }
 }
 </script>
-
 </body>
 </html>
