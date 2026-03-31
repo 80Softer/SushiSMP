@@ -3,7 +3,7 @@ on:
   repository_dispatch:
     types: [start-server]
 
-# ここを追加！Actionsに「Codespaceを読み書きする権限」をハッキリ与えます
+# ここを一番左端（スペースなし）から書き始めてください
 permissions:
   codespaces: write
   contents: read
@@ -20,7 +20,7 @@ jobs:
           CS_NAME=$(gh codespace list --repo 80softer/SushiSMP --json name -q '.[0].name')
           
           if [ -z "$CS_NAME" ]; then
-            echo "❌ Codespaceが見つかりませんでした。一度Codespaceを作成しているか確認してください。"
+            echo "❌ Codespaceが見つかりませんでした。"
             exit 1
           fi
           
