@@ -3,7 +3,6 @@ on:
   repository_dispatch:
     types: [start-server]
 
-# 変なエラーを避けるために、許可設定を一番シンプルにしたよ
 permissions: write-all
 
 jobs:
@@ -12,10 +11,10 @@ jobs:
     steps:
       - name: Wake up Codespace
         env:
-          # ここは変えずにそのままでOK
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # ここを「MY_TOKEN」に変えることで最強のパワーを使えるようにします
+          GH_TOKEN: ${{ secrets.MY_TOKEN }}
         run: |
-          # ユーザー名の「S」を大文字（80Softer）に合わせたよ
+          # 自分のリポジトリ名を確認
           CS_NAME=$(gh codespace list --repo 80Softer/SushiSMP --json name -q '.[0].name')
           
           if [ -z "$CS_NAME" ]; then
@@ -24,6 +23,5 @@ jobs:
           fi
           
           echo "🚀 Codespace '$CS_NAME' を起動します..."
-          # 確実に起動させるコマンドに変更
           gh codespace resume -c "$CS_NAME"
           echo "✅ 起動命令を送信しました！"
