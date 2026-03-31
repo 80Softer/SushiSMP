@@ -1,0 +1,5 @@
+{
+    "name": "Minecraft Server",
+    "image": "mcr.microsoft.com/devcontainers/universal:latest",
+    "postStartCommand": "bash .devcontainer/start.sh"
+}
