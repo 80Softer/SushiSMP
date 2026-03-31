@@ -9,8 +9,19 @@ jobs:
     steps:
       - name: Wake up Codespace
         env:
+          # ここで使うトークンは、GitHubが自動で用意するやつでOK
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # 最初のCodespaceを探して起動命令を出す
-          CS_NAME=$(gh codespace list --json name -q '.[0].name')
-          gh codespace code -c $CS_NAME
+          # 1. あなたのリポジトリに関連付けられたCodespaceを探す
+          CS_NAME=$(gh codespace list --repo 80softer/SushiSMP --json name -q '.[0].name')
+          
+          # 2. もし見つからなかったらエラーを表示して終了
+          if [ -z "$CS_NAME" ]; then
+            echo "❌ Codespaceが見つかりませんでした。リポジトリ名を確認してください。"
+            exit 1
+          fi
+          
+          # 3. 見つかったCodespaceを起動する
+          echo "🚀 Codespace '$CS_NAME' を起動します..."
+          gh codespace code -c "$CS_NAME"
+          echo "✅ 起動命令を送信しました！"
