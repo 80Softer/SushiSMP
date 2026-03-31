@@ -1,15 +1,22 @@
 {
   "name": "SushiSMP Server",
   "image": "mcr.microsoft.com/devcontainers/java:17",
-  
-  // 📦 ここを追加すると、起動時に自動でインストールしてくれる！
   "features": {
     "ghcr.io/devcontainers/features/common-utils:1": {
       "installZsh": true,
       "configureZshAsDefaultShell": false
     }
-  }
-
-  // 🚀 ついでに「起動したら勝手にサーバーを動かす」設定
-  "postStartCommand": "sudo apt-get update && sudo apt-get install -y screen && cd /workspaces/SushiSMP/server && bash start.sh"
+  },
+  // 起動した瞬間に、下のstart.shを自動実行する設定
+  "postStartCommand": "sudo apt-get update && sudo apt-get install -y screen && bash /workspaces/SushiSMP/.devcontainer/start.sh",
+  
+  "customizations": {
+    "codespaces": {
+      "openFiles": [
+        ".devcontainer/start.sh"
+      ]
+    }
+  },
+  // マイクラとProxyのポートを開放（Publicにするのはあとで手動か設定で）
+  "forwardPorts": [25565, 25577]
 }
