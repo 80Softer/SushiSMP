@@ -1,39 +1,43 @@
-#!/bin/bash
-# --- 1. Waterfall の起動 ---
-echo "🌊 Starting Waterfall..."
-cd /workspaces/SushiSMP/waterfall || exit
-# proxyという名前のscreenで裏起動
-screen -d -m -S proxy java -Xms512M -Xmx512M -jar waterfall.jar
-# --- 2. 少し待機 ---
-sleep 5
+{
+  "name": "SushiSMP Server",
+  "image": "mcr.microsoft.com/devcontainers/java:17",
 
-# --- 3. マイクラ本体の起動 ---
-echo "🌍 Starting Minecraft Server..."
-cd /workspaces/SushiSMP/server || exit
-# minecraftという名前のscreenで裏起動
-screen -d -m -S minecraft java -Xms1G -Xmx1G -jar server.jar
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:1": {
+      "installZsh": true
+    }
+  },
 
-echo "✅ Servers started in separate screens!"
-=======
-# --- Waterfall の起動 ---
-=======
-# 1. 実行権限を自分自身に与える
-chmod +x "$0"
+  // 🚀 起動時に「screenのインストール」→「権限付与」→「サーバー起動」を全部やる
+  "postStartCommand": "sudo apt-get update && sudo apt-get install -y screen && chmod +x .devcontainer/start.sh && ./.devcontainer/start.sh",
 
-# 2. Waterfall の起動
->>>>>>> 6ea1a8b (fix: updated start.sh with better logging and paths)
-echo "🌊 Starting Waterfall..."
-cd /workspaces/SushiSMP/waterfall || exit
-# ログを出力するようにして screen 起動
-screen -dmS proxy bash -c "java -Xms512M -Xmx512M -jar waterfall.jar > startup.log 2>&1"
+  "customizations": {
+    "codespaces": {
+      "openFiles": [
+        ".devcontainer/start.sh"
+      ]
+    }
+  },
 
-sleep 3
+  // 🌐 使うポートをすべて登録
+  "forwardPorts": [25565, 25577, 8081],
 
-# 3. Server の起動
-echo "🌍 Starting Minecraft Server..."
-cd /workspaces/SushiSMP/server || exit
-# ログを出力するようにして screen 起動
-screen -dmS minecraft bash -c "java -Xms1G -Xmx1G -jar server.jar > startup.log 2>&1"
-echo "✅ Check results with 'screen -ls'"
-=======
-echo "✅ Check 'screen -ls' in 5 seconds."
+  // 🔓 ポートを自動で「Public（地球儀マーク）」にする設定
+  "portsAttributes": {
+    "25565": {
+      "label": "Minecraft Server",
+      "onAutoForward": "ignore",
+      "visibility": "public"
+    },
+    "25577": {
+      "label": "Waterfall Proxy",
+      "onAutoForward": "ignore",
+      "visibility": "public"
+    },
+    "8081": {
+      "label": "Web Port",
+      "onAutoForward": "ignore",
+      "visibility": "public"
+    }
+  }
+}
