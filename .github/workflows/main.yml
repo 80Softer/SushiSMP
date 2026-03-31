@@ -1,12 +1,9 @@
 name: Wake Up Codespace
-
 on:
   repository_dispatch:
     types: [start-server]
 
-permissions:
-  contents: read
-  codespaces: write
+permissions: write-all
 
 jobs:
   wake-up:
@@ -16,14 +13,10 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # 1. 自分のリポジトリに関連付けられたCodespaceを探す
           CS_NAME=$(gh codespace list --repo 80softer/SushiSMP --json name -q '.[0].name')
-          
           if [ -z "$CS_NAME" ]; then
             echo "❌ Codespaceが見つかりませんでした。"
             exit 1
           fi
-          
-          echo "🚀 Codespace '$CS_NAME' を起動します..."
           gh codespace code -c "$CS_NAME"
           echo "✅ 起動命令を送信しました！"
