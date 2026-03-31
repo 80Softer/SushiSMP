@@ -16,7 +16,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # 自分のリポジトリに関連付けられたCodespaceを探す
+          # 1. 自分のリポジトリに関連付けられたCodespaceを探す
           CS_NAME=$(gh codespace list --repo 80softer/SushiSMP --json name -q '.[0].name')
           
           if [ -z "$CS_NAME" ]; then
