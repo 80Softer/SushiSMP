@@ -1,34 +1,69 @@
-<div id="server-panel" style="background: #f0f0f0; border: 1px solid #ccc; padding: 15px; border-radius: 5px; width: 250px; text-align: center;">
-    <h3 style="margin-top: 0;">SushiSMP Control</h3>
-    <button id="start-btn" onclick="runBootProcess()" style="background-color: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">
-        🚀 サーバー起動
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SushiSMP - Server Control</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; width: 320px; }
+        h1 { color: #333; margin-bottom: 1.5rem; font-size: 1.5rem; }
+        #start-btn { background-color: #28a745; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: bold; transition: background 0.3s; width: 100%; }
+        #start-btn:hover { background-color: #218838; }
+        #start-btn:disabled { background-color: #ccc; cursor: not-allowed; }
+        #status-text { margin-top: 1rem; font-size: 0.9rem; color: #666; min-height: 1.2em; }
+        .loader { border: 3px solid #f3f3f3; border-top: 3px solid #3498db; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; margin-right: 8px; display: none; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h1>🍣 SushiSMP Portal</h1>
+    
+    <button id="start-btn" onclick="runBootProcess()">
+        🚀 サーバーを起動する
     </button>
-    <p id="status-text" style="font-size: 12px; margin-top: 10px; color: #666;">ボタンを押して起動リクエストを送信</p>
+    
+    <div id="status-text">
+        <span id="loader" class="loader"></span>
+        <span id="msg">ボタンを押すとCodespaceが起きます</span>
+    </div>
 </div>
 
 <script>
 async function runBootProcess() {
-    // あなたが発行したGASのURL
+    // あなたのGASウェブアプリURL
     const gasUrl = "https://script.google.com/macros/s/AKfycbxyBl0gbiLRaWTXe0xZe85PxPcrO_bKlJgXX5l162frARXOlBhWf6dBOpzE_Qxix8DcKw/exec";
     
     const btn = document.getElementById('start-btn');
-    const txt = document.getElementById('status-text');
+    const msg = document.getElementById('msg');
+    const loader = document.getElementById('loader');
 
-    // ボタンを無効化して連打を防ぐ
+    // 状態の更新
     btn.disabled = true;
-    btn.style.backgroundColor = "#ccc";
-    txt.innerText = "通信中...";
+    loader.style.display = "inline-block";
+    msg.innerText = "信号を送信中...";
 
     try {
-        // GASへ信号を送る
+        // GASへPOSTリクエストを送信
         const response = await fetch(gasUrl, { method: "POST" });
         const result = await response.text();
         
-        txt.innerText = "完了: " + result;
+        // 成功時の表示
+        loader.style.display = "none";
+        msg.style.color = "#28a745";
+        msg.innerText = "✅ 送信完了！1~2分でサーバーが立ち上がります。";
+        
     } catch (e) {
-        txt.innerText = "エラー: 接続できませんでした";
+        // エラー時の表示
+        loader.style.display = "none";
+        msg.style.color = "#dc3545";
+        msg.innerText = "❌ エラー: 接続できませんでした";
         btn.disabled = false;
-        btn.style.backgroundColor = "#28a745";
     }
 }
 </script>
+
+</body>
+</html>
