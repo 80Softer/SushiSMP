@@ -11,10 +11,9 @@ jobs:
     steps:
       - name: Wake up Codespace
         env:
-          # ここを「MY_TOKEN」に変えることで最強のパワーを使えるようにします
           GH_TOKEN: ${{ secrets.MY_TOKEN }}
         run: |
-          # 自分のリポジトリ名を確認
+          # 1. あなたの Codespace の名前を取得
           CS_NAME=$(gh codespace list --repo 80Softer/SushiSMP --json name -q '.[0].name')
           
           if [ -z "$CS_NAME" ]; then
@@ -23,5 +22,8 @@ jobs:
           fi
           
           echo "🚀 Codespace '$CS_NAME' を起動します..."
-          gh codespace resume -c "$CS_NAME"
-          echo "✅ 起動命令を送信しました！"
+          
+          # 2. 直接「起動」命令を送る（これが最強の方法です）
+          gh api -X POST /user/codespaces/$CS_NAME/start
+          
+          echo "✅ サーバーの起動命令を送信しました！"
