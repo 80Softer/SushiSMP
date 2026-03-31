@@ -1,22 +1,53 @@
 {
   "name": "SushiSMP Server",
   "image": "mcr.microsoft.com/devcontainers/java:17",
+
+  // 📦 必要な道具（screenなど）を自動で入れる設定
   "features": {
     "ghcr.io/devcontainers/features/common-utils:1": {
       "installZsh": true,
       "configureZshAsDefaultShell": false
     }
   },
-  // 起動した瞬間に、下のstart.shを自動実行する設定
+
+  // 🚀 Codespaceが起動した瞬間に実行される命令
+  // 1. 念のため最新の状態にする
+  // 2. screenをインストール
+  // 3. start.shを動かしてWaterfallとServerを裏で起動
   "postStartCommand": "sudo apt-get update && sudo apt-get install -y screen && bash /workspaces/SushiSMP/.devcontainer/start.sh",
-  
+
   "customizations": {
+    "vscode": {
+      // 便利な拡張機能を入れておくと管理が楽になります
+      "extensions": [
+        "vscjava.vscode-java-pack",
+        "mrmlnc.vscode-apache-conf"
+      ]
+    },
     "codespaces": {
       "openFiles": [
-        ".devcontainer/start.sh"
+        ".devcontainer/start.sh",
+        "waterfall/waterfall.log",
+        "server/server.log"
       ]
     }
   },
-  // マイクラとProxyのポートを開放（Publicにするのはあとで手動か設定で）
-  "forwardPorts": [25565, 25577]
+
+  // 🌐 マイクラとProxyのポートを自動開放
+  // 25565: Minecraft本体 / 25577: Waterfall
+  "forwardPorts": [
+    25565,
+    25577
+  ],
+
+  "portsAttributes": {
+    "25565": {
+      "label": "Minecraft Server",
+      "onAutoForward": "notify"
+    },
+    "25577": {
+      "label": "Waterfall Proxy",
+      "onAutoForward": "notify"
+    }
+  }
 }
