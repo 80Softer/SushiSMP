@@ -3,6 +3,7 @@
 # --- 1. Waterfall Proxy の起動 ---
 echo "🌊 Starting Waterfall Proxy..."
 # 今のディレクトリ（waterfallフォルダ）にあるjarを起動
+cd /workspaces/SushiSMP/waterfall
 screen -d -m -S proxy java -Xms512M -Xmx512M -jar waterfall.jar
 
 # --- 2. マイクラ本体 (Server) の起動 ---
