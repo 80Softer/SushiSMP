@@ -3,25 +3,27 @@ on:
   repository_dispatch:
     types: [start-server]
 
+# ここを追加！Actionsに「Codespaceを読み書きする権限」をハッキリ与えます
+permissions:
+  codespaces: write
+  contents: read
+
 jobs:
   wake-up:
     runs-on: ubuntu-latest
     steps:
       - name: Wake up Codespace
         env:
-          # ここで使うトークンは、GitHubが自動で用意するやつでOK
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # 1. あなたのリポジトリに関連付けられたCodespaceを探す
+          # 1. 自分のリポジトリに関連付けられたCodespaceを探す
           CS_NAME=$(gh codespace list --repo 80softer/SushiSMP --json name -q '.[0].name')
           
-          # 2. もし見つからなかったらエラーを表示して終了
           if [ -z "$CS_NAME" ]; then
-            echo "❌ Codespaceが見つかりませんでした。リポジトリ名を確認してください。"
+            echo "❌ Codespaceが見つかりませんでした。一度Codespaceを作成しているか確認してください。"
             exit 1
           fi
           
-          # 3. 見つかったCodespaceを起動する
           echo "🚀 Codespace '$CS_NAME' を起動します..."
           gh codespace code -c "$CS_NAME"
           echo "✅ 起動命令を送信しました！"
